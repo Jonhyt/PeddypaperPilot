@@ -15,8 +15,7 @@ export default class CameraPage extends React.Component {
 
     async componentDidMount() {
         const camera = await Permissions.askAsync(Permissions.CAMERA);
-        const audio = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
-        const hasCameraPermission = (camera.status === 'granted' && audio.status === 'granted');
+        const hasCameraPermission = (camera.status === 'granted');
 
         this.setState({ hasCameraPermission });
     };
