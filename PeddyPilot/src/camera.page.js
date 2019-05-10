@@ -1,43 +1,100 @@
-// src/camera.page.js file
-import React from 'react';
-import { View, Text } from 'react-native';
-import { Camera, Permissions } from 'expo';
+import React, { Component } from 'react';
+import { Alert, Linking, Dimensions, LayoutAnimation, Text, View, StatusBar, TouchableOpacity } from 'react-native';
+import { BarCodeScanner, Permissions } from 'expo';
 import BarcodeMask from 'react-native-barcode-mask';
 
 import styles from './styles';
 
-export default class CameraPage extends React.Component {
-    camera = null;
-
+export default class App extends Component {
     state = {
         hasCameraPermission: null,
+        lastScannedUrl: null,
     };
 
-    async componentDidMount() {
-        const camera = await Permissions.askAsync(Permissions.CAMERA);
-        const hasCameraPermission = (camera.status === 'granted');
+    componentDidMount() {
+        this._requestCameraPermission();
+    }
 
-        this.setState({ hasCameraPermission });
+    _requestCameraPermission = async () => {
+        const { status } = await Permissions.askAsync(Permissions.CAMERA);
+        this.setState({
+            hasCameraPermission: status === 'granted',
+        });
+    };
+//On detecting a QRCode
+    _handleBarCodeRead = result => {
+        if (result.data !== this.state.lastScannedUrl) {
+            LayoutAnimation.spring();
+            this.setState({ lastScannedUrl: result.data });
+        }
     };
 
     render() {
-        const { hasCameraPermission } = this.state;
+        return (
+            <View style={styles.container}>
 
-        if (hasCameraPermission === null) {
-            return <View />;
-        } else if (hasCameraPermission === false) {
-            return <Text>Access to camera has been denied.</Text>;
+                {this.state.hasCameraPermission === null
+                    ? <Text>Requesting for camera permission</Text>
+                    : this.state.hasCameraPermission === false
+                        ? <Text style={{ color: '#fff' }}>
+                            Camera permission is not granted
+                </Text>
+                        : <BarCodeScanner
+                            onBarCodeRead={this._handleBarCodeRead}
+                            style={{
+                                height: Dimensions.get('window').height,
+                                width: Dimensions.get('window').width,
+                            }}
+                        />}
+                <BarcodeMask edgeColor={'#62B1F6'} width={300} height={300} />
+
+                {this._maybeRenderUrl()}
+
+                <StatusBar hidden />
+            </View>
+        );
+    }
+
+//Open alert text on press
+    _handlePressUrl = () => {
+        Alert.alert(
+            'Open this URL?',
+            this.state.lastScannedUrl,
+            [
+                {
+                    text: 'Yes',
+                    onPress: () => Linking.openURL(this.state.lastScannedUrl),
+                },
+                { text: 'No', onPress: () => { } },
+            ],
+            { cancellable: false }
+        );
+    };
+//To clean last QRcode scan
+    _handlePressCancel = () => {
+        this.setState({ lastScannedUrl: null });
+    };
+//Show Scanned info to user
+    _maybeRenderUrl = () => {
+        if (!this.state.lastScannedUrl) {
+            return;
         }
 
         return (
-            <View>
-                <Camera
-                    style={styles.cameraPreview}
-                    ref={camera => this.camera = camera}
-                >
-                <BarcodeMask edgeColor={'#62B1F6'} width={300} height={300}/>
-                </Camera>
+            <View style={styles.bottomBar}>
+                <TouchableOpacity style={styles.url} onPress={this._handlePressUrl}>
+                    <Text numberOfLines={1} style={styles.urlText}>
+                        {this.state.lastScannedUrl}
+                    </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={this._handlePressCancel}>
+                    <Text style={styles.cancelButtonText}>
+                        Cancel
+          </Text>
+                </TouchableOpacity>
             </View>
         );
     };
-};
+}
