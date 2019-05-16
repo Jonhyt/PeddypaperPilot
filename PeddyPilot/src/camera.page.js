@@ -11,10 +11,11 @@ import {
 } from "react-native";
 import { BarCodeScanner, Camera, Permissions } from "expo";
 import BarcodeMask from "react-native-barcode-mask";
+import { NavigationEvents } from "react-navigation";
 
 import styles from "./styles";
 
-export default class App extends Component {
+export default class CameraPage extends Component {
   state = {
     hasCameraPermission: null,
     lastScannedUrl: null
@@ -35,12 +36,26 @@ export default class App extends Component {
     if (result.data !== this.state.lastScannedUrl) {
       LayoutAnimation.spring();
       this.setState({ lastScannedUrl: result.data });
+      //      this._handleShowInformation();
     }
   };
 
+  _handleShowInformation = result => {
+    () => this.props.navigation.navigate("QR_Info", { qrInfo: lastScannedUrl });
+  };
+
   render() {
+    let { isFocused } = this.state;
     return (
-      <View style={styles.container}>
+      <View style={styles.containerCamera}>
+        <NavigationEvents
+          onWillFocus={() => {
+            this.setState({ isFocused: true });
+          }}
+          onDidBlur={() => {
+            this.setState({ isFocused: false });
+          }}
+        />
         {this.state.hasCameraPermission === null ? (
           <Text>Requesting for camera permission</Text>
         ) : this.state.hasCameraPermission === false ? (
@@ -48,19 +63,22 @@ export default class App extends Component {
             Camera permission is not granted
           </Text>
         ) : (
-          <Camera
-            ref={ref => {
-              this.camera = ref;
-            }}
-            barCodeScannerSettings={{
-              barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
-            }}
-            onBarCodeScanned={this._handleBarCodeScanned}
-            style={{
-              height: Dimensions.get("window").height,
-              width: Dimensions.get("window").width
-            }}
-          />
+          isFocused && (
+            <Camera
+              type={Camera.Constants.Type.back}
+              ref={ref => {
+                this.camera = ref;
+              }}
+              barCodeScannerSettings={{
+                barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]
+              }}
+              onBarCodeScanned={this._handleBarCodeScanned}
+              style={{
+                height: Dimensions.get("window").height,
+                width: Dimensions.get("window").width
+              }}
+            />
+          )
         )}
         <BarcodeMask
           edgeColor={"#62B1F6"}
