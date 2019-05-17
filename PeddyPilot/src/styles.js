@@ -17,6 +17,11 @@ export default StyleSheet.create({
         paddingTop: 20,
     },
 
+    containerList: {
+        flex: 1,
+        backgroundColor: "#fff"
+       },
+
     containerCamera: {
         flex: 1,
         alignItems: 'center',
@@ -86,4 +91,15 @@ export default StyleSheet.create({
         color: 'rgba(255,255,255,0.8)',
         fontSize: 18,
     },
+      loader:{
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#fff"
+       },
+      list:{
+        paddingVertical: 4,
+        margin: 5,
+        backgroundColor: "#fff"
+       }
 });

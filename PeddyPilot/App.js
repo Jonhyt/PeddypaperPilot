@@ -1,30 +1,45 @@
-import React from "react";
-import { View, Text, Button } from "react-native";
+import React, { Component } from "react";
+import { View, Text, TouchableOpacity } from "react-native";
 import {
   createAppContainer,
   createStackNavigator,
   createBottomTabNavigator,
-  StackActions,
   NavigationActions
 } from "react-navigation";
 
 import CameraPage from "./src/camera.page";
 import QRgenPage from "./src/qr.gen";
 import QRinfoPage from "./src/qr.info";
+import WebApiPage from "./src/backend.link";
+import styles from "./src/styles";
 
-class HomeScreen extends React.Component {
+class HomeScreen extends Component {
   render() {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Text>Home Screen</Text>
-        <Button
-          title="Go to QR Generator"
+
+        <TouchableOpacity
+          style={styles.ShowButton}
           onPress={() => {
             this.props.navigation.dispatch(
               NavigationActions.navigate({ routeName: "QR_Generator" })
             );
           }}
-        />
+        >
+          <Text style={styles.TextStyle} > Go to QR Generator </Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.ShowButton}
+          onPress={() => {
+            this.props.navigation.dispatch(
+              NavigationActions.navigate({ routeName: "WebApi" })
+            );
+          }}
+        >
+          <Text style={styles.TextStyle} > Go talk with the api </Text>
+        </TouchableOpacity>
       </View>
     );
   }
@@ -45,11 +60,17 @@ class QR_GenScreen extends React.Component {
     return <QRgenPage />;
   }
 }
+class WebApiScreen extends React.Component {
+  render() {
+    return <WebApiPage />;
+  }
+}
 
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
-    QR_Generator: QR_GenScreen
+    QR_Generator: QR_GenScreen,
+    WebApi: WebApiScreen
   },
   {
     initialRouteName: "Home"

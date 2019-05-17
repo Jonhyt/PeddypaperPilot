@@ -33,15 +33,10 @@ export default class CameraPage extends Component {
   };
   //On detecting a QRCode
   _handleBarCodeScanned = result => {
-    const { navigate } = this.props.navigation;
     if (result.data !== this.state.lastScannedUrl) {
       LayoutAnimation.spring();
       this.setState({ lastScannedUrl: result.data });
-      {() => navigate("QR_Info")}
-      /*     NavigationActions.navigate(
-        { routeName: "QR_Info" },
-        { qrInfo: lastScannedUrl }
-      );*/
+      () => this.props.navigation.push("QR_Info", { qrInfo: lastScannedUrl });
     }
   };
 
