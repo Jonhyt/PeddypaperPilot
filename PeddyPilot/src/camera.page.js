@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { BarCodeScanner, Camera, Permissions } from "expo";
 import BarcodeMask from "react-native-barcode-mask";
-import { NavigationEvents } from "react-navigation";
+import { NavigationActions, NavigationEvents } from "react-navigation";
 
 import styles from "./styles";
 
@@ -33,15 +33,16 @@ export default class CameraPage extends Component {
   };
   //On detecting a QRCode
   _handleBarCodeScanned = result => {
+    const { navigate } = this.props.navigation;
     if (result.data !== this.state.lastScannedUrl) {
       LayoutAnimation.spring();
       this.setState({ lastScannedUrl: result.data });
-      //      this._handleShowInformation();
+      {() => navigate("QR_Info")}
+      /*     NavigationActions.navigate(
+        { routeName: "QR_Info" },
+        { qrInfo: lastScannedUrl }
+      );*/
     }
-  };
-
-  _handleShowInformation = result => {
-    () => this.props.navigation.navigate("QR_Info", { qrInfo: lastScannedUrl });
   };
 
   render() {

@@ -3,9 +3,9 @@ import { View, Text} from "react-native";
 
 import styles from "./styles";
 
-export default class QR_GenScreen extends Component {
+export default class QR_infoScreen extends Component {
   state = {
-    Text_Output: "hi"
+    Text_Input: this.props.navigation
   };
 
   render() {
