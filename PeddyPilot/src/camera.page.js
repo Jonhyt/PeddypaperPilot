@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { BarCodeScanner, Camera, Permissions } from "expo";
 import BarcodeMask from "react-native-barcode-mask";
-import { NavigationActions, NavigationEvents } from "react-navigation";
+import { NavigationEvents } from "react-navigation";
 
 import styles from "./styles";
 

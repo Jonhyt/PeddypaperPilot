@@ -9,11 +9,11 @@ import {
 
 import styles from "./styles";
 
-export default class Source extends React.Component {
+export default class WebApiPage extends React.Component {
   static navigationOptions = ({ navigation }) => {
     return {
-      title: "Source Listing",
-      headerStyle: { backgroundColor: "#fff" },
+      title: "Route Listing",
+      headerStyle: { backgroundColor: "#000" },
       headerTitleStyle: { textAlign: "center", flex: 1 }
     };
   };
@@ -32,8 +32,11 @@ export default class Source extends React.Component {
           loading: false,
           dataSource: responseJson
         });
+        
+        console.log(this.state.dataSource)
       })
       .catch(error => console.log(error)); //to catch the errors if any
+
   }
   FlatListItemSeparator = () => {
     return (

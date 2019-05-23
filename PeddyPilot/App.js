@@ -1,3 +1,5 @@
+//TODO: Autenticação por API
+
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import {
@@ -9,8 +11,9 @@ import {
 
 import CameraPage from "./src/camera.page";
 import QRgenPage from "./src/qr.gen";
-import QRinfoPage from "./src/qr.info";
 import WebApiPage from "./src/backend.link";
+import FetchGpsPage from "./src/fetch.gps";
+
 import styles from "./src/styles";
 
 class HomeScreen extends Component {
@@ -40,6 +43,18 @@ class HomeScreen extends Component {
         >
           <Text style={styles.TextStyle} > Go talk with the api </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.ShowButton}
+          onPress={() => {
+            this.props.navigation.dispatch(
+              NavigationActions.navigate({ routeName: "FetchGps" })
+            );
+          }}
+        >
+          <Text style={styles.TextStyle} > See your GPS location </Text>
+        </TouchableOpacity>
+
       </View>
     );
   }
@@ -48,11 +63,6 @@ class HomeScreen extends Component {
 class QR_ReaderScreen extends React.Component {
   render() {
     return <CameraPage />;
-  }
-}
-class QR_InfoScreen extends React.Component {
-  render() {
-    return <QRinfoPage />;
   }
 }
 class QR_GenScreen extends React.Component {
@@ -65,12 +75,18 @@ class WebApiScreen extends React.Component {
     return <WebApiPage />;
   }
 }
+class FetchGpsScreen extends React.Component {
+  render() {
+    return <FetchGpsPage />;
+  }
+}
 
 const HomeStack = createStackNavigator(
   {
     Home: HomeScreen,
     QR_Generator: QR_GenScreen,
-    WebApi: WebApiScreen
+    WebApi: WebApiScreen,
+    FetchGps: FetchGpsScreen,
   },
   {
     initialRouteName: "Home"
@@ -80,7 +96,6 @@ const HomeStack = createStackNavigator(
 const QR_Stack = createStackNavigator(
   {
     QR_Reader: QR_ReaderScreen,
-    QR_Info: QR_InfoScreen
   },
   {
     initialRouteName: "QR_Reader"
