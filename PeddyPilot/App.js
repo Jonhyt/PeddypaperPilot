@@ -1,4 +1,4 @@
-//TODO: Autenticação por API //// Login
+//TODO: POST api/autenticatation + resolução de eventuais erros de "Login"
 
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
@@ -18,15 +18,6 @@ import LoginPage from "./src/login"
 import styles from "./src/styles";
 
 class HomeScreen extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: true,
-      dataSource: null,
-      errorMessage: null
-    };
-  }
-
   render() {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
