@@ -1,0 +1,7 @@
+{
+  "url": {
+    "home": "http://adamastor.ipt.pt/AppPeddyPaper/",
+    "percursos": "api/percursos",
+    "values": "api/values",
+  }
+}

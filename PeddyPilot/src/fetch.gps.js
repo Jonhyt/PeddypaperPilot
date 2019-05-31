@@ -1,8 +1,15 @@
 import React from "react";
-import { View, ActivityIndicator, Text, TouchableOpacity } from "react-native";
+import {
+  View,
+  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  Alert
+} from "react-native";
 import { Location, Permissions } from "expo";
 
 import styles from "./styles";
+import { NavigationActions } from "react-navigation";
 
 export default class FetchGpsPage extends React.Component {
   constructor(props) {
@@ -40,10 +47,23 @@ export default class FetchGpsPage extends React.Component {
         });
       })
       .catch(error => {
-        console.log(error);
-        this.setState({ loading: false });
+        error.code === "E_LOCATION_SERVICES_DISABLED"
+          ? Alert.alert(
+              "Check Location Services",
+              "Please check if locations services are enabled",
+              [
+                {
+                  text: "Ok",
+                  onPress: () =>
+                      NavigationActions.navigate({ routeName: "Home" })
+                    
+                }
+              ],
+              { cancellable: false }
+            )
+          : console.warn(error.code);
       }); //to catch the errors if any
-  }
+  };
 
   FlatListItemSeparator = () => {
     return (
@@ -59,10 +79,10 @@ export default class FetchGpsPage extends React.Component {
 
   render() {
     if (this.state.errorMessage) {
-      return(
-      <View style={styles.container}>
-        <Text style={styles.TextStyle}> {errorMessage} </Text>
-      </View>
+      return (
+        <View style={styles.container}>
+          <Text style={styles.TextStyle}> {errorMessage} </Text>
+        </View>
       );
     }
     if (this.state.loading) {
@@ -78,16 +98,21 @@ export default class FetchGpsPage extends React.Component {
       <View style={styles.containerList}>
         <Text style={styles.lightText}> Timestamp : {data.timestamp}</Text>
         <Text style={styles.lightText}> Heading : {data.coords.heading}</Text>
-        <Text style={styles.lightText}> Longitude : {data.coords.longitude} </Text>
+        <Text style={styles.lightText}>
+          {" "}
+          Longitude : {data.coords.longitude}{" "}
+        </Text>
         <Text style={styles.lightText}> Speed : {data.coords.speed}</Text>
         <Text style={styles.lightText}> Altitude : {data.coords.altitude}</Text>
         <Text style={styles.lightText}> Latitude : {data.coords.latitude}</Text>
         <Text style={styles.lightText}> Accuracy : {data.coords.accuracy}</Text>
         <TouchableOpacity
           style={styles.ShowButton}
-          onPress={() => {this._getUserLocation()}}
+          onPress={() => {
+            this._getUserLocation();
+          }}
         >
-          <Text style={styles.TextStyle} > See your GPS location </Text>
+          <Text style={styles.TextStyle}> Recheck your GPS location </Text>
         </TouchableOpacity>
       </View>
     );

@@ -8,6 +8,7 @@ import {
 } from "react-native";
 
 import styles from "./styles";
+import fileConfigs from "./settings.json"
 
 export default class WebApiPage extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -21,11 +22,12 @@ export default class WebApiPage extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      dataSource: []
+      dataSource: [],
     };
   }
   componentDidMount() {
-    fetch("http://adamastor.ipt.pt/AppPeddyPaper/api/Percursos")
+    const url = fileConfigs.url;
+    fetch(url.home+url.percursos)
       .then(response => response.json())
       .then(responseJson => {
         this.setState({

@@ -1,4 +1,4 @@
-//TODO: Autenticação por API
+//TODO: Autenticação por API //// Login
 
 import React, { Component } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
@@ -13,10 +13,20 @@ import CameraPage from "./src/camera.page";
 import QRgenPage from "./src/qr.gen";
 import WebApiPage from "./src/backend.link";
 import FetchGpsPage from "./src/fetch.gps";
+import LoginPage from "./src/login"
 
 import styles from "./src/styles";
 
 class HomeScreen extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      dataSource: null,
+      errorMessage: null
+    };
+  }
+
   render() {
     return (
       <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -60,6 +70,11 @@ class HomeScreen extends Component {
   }
 }
 
+class LoginScreen extends React.Component {
+  render() {
+    return <LoginPage />;
+  }
+}
 class QR_ReaderScreen extends React.Component {
   render() {
     return <CameraPage />;
@@ -80,6 +95,15 @@ class FetchGpsScreen extends React.Component {
     return <FetchGpsPage />;
   }
 }
+
+const LoginStack = createStackNavigator(
+  {
+    LoginPage: LoginScreen,
+  },
+  {
+    initialRouteName: "LoginPage"
+  }
+);
 
 const HomeStack = createStackNavigator(
   {
@@ -103,6 +127,7 @@ const QR_Stack = createStackNavigator(
 );
 
 const TabNavigator = createBottomTabNavigator({
+  Login: LoginStack,
   Home: HomeStack,
   QR_Reader: QR_Stack
 });
